@@ -37,7 +37,7 @@ public class FAPI2BaselineID2BrazilDCRTestPlan implements TestPlan {
 					FAPI2BaselineID2BrazilDCRInvalidJwksUri.class,
 					FAPI2BaselineID2BrazilDCRInvalidJwksByValue.class
 				),
-				List.of(new Variant(FAPI2ID2OPProfile.class, "openbanking_brazil"))
+				List.of()
 			)
 		);
 
