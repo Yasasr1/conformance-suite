@@ -14,7 +14,7 @@ public class FAPIBrazilExtractJwksUriFromSoftwareStatement extends AbstractCondi
 	public Environment evaluate(Environment env) {
 		// note that software_jwks_uri differs from rfc7591, which would use jwks_uri
 		// This is as per the Brazil (and UK) OpenBanking dynamic client registration specification
-		String jwksUri = env.getString("software_statement_assertion", "claims.software_jwks_uri");
+		String jwksUri = env.getString("software_statement_assertion", "claims.jwks_uri"); // FIXME hack
 
 		if (Strings.isNullOrEmpty((jwksUri))) {
 			throw error("Software statement 'software_jwks_uri' missing or empty");

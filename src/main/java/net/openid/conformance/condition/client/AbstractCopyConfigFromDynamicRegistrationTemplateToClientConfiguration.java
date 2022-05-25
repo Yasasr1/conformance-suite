@@ -19,6 +19,10 @@ public abstract class AbstractCopyConfigFromDynamicRegistrationTemplateToClientC
 		String configName = getExpectedConfigName();
 		String specifiedConfigValue = env.getString("original_client_config", configName);
 
+		if (configName.equals("scope")) {
+			specifiedConfigValue = "openid"; // FIXME hack
+		}
+
 		if (Strings.isNullOrEmpty(specifiedConfigValue)) {
 			throw error(String.format("Couldn't find %s in configuration", configName));
 		}

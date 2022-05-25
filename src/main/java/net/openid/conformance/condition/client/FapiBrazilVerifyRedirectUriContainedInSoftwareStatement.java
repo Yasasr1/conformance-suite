@@ -17,7 +17,7 @@ public class FapiBrazilVerifyRedirectUriContainedInSoftwareStatement extends Abs
 	public Environment evaluate(Environment env) {
 
 		// Note the non-RFC7591 claim software_redirect_uris that is used in Brazil & UK OpenBanking
-		JsonElement redirectUris = env.getElementFromObject("software_statement_assertion", "claims.software_redirect_uris");
+		JsonElement redirectUris = env.getElementFromObject("software_statement_assertion", "claims.redirect_uris");
 
 		if (redirectUris == null || !redirectUris.isJsonArray()) {
 			throw error("software_redirect_uris is software statement is missing or not an array");

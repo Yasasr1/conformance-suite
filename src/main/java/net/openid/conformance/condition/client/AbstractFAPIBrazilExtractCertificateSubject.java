@@ -34,13 +34,15 @@ public abstract class AbstractFAPIBrazilExtractCertificateSubject extends Abstra
 
 		RDN ou = x500name.getRDNs(BCStyle.OU)[0];
 		String ouAsString = IETFUtils.valueToString(ou.getFirst().getValue());
+		RDN cn = x500name.getRDNs(BCStyle.CN)[0];
+		String cnAsString = IETFUtils.valueToString(cn.getFirst().getValue());
 
 		RDN[] uid = x500name.getRDNs(BCStyle.UID);
 		String softwareId;
 		if (uid.length == 0) {
 //			throw error(emptyUidErrorMessage,
-				args("subjectdn", subjectDn));
-softwareId = "flibbleboo";
+//				args("subjectdn", subjectDn));
+softwareId = cnAsString; // FIXME idmvp hack
 		} else {
 			// newer Brazilian style certificate as per
 			// https://github.com/OpenBanking-Brasil/specs-seguranca/blob/main/open-banking-brasil-certificate-standards-1_ID1-ptbr.md
