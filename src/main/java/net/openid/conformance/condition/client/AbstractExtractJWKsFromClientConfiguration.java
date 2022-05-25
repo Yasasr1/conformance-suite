@@ -38,7 +38,7 @@ public abstract class AbstractExtractJWKsFromClientConfiguration extends Abstrac
 			try {
 				JWK jwk = JWK.parse(jwks.toString());
 				parsed = new JWKSet(jwk);
-				jwks = JsonParser.parseString(parsed.toString());
+				jwks = JsonParser.parseString(parsed.toString(false));
 			} catch (ParseException e) {
 				throw error("Invalid JWK in client configuration: " + e.getMessage(),
 					e, args("client_jwks", jwks));
