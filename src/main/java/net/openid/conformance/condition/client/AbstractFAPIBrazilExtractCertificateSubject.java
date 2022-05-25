@@ -38,8 +38,9 @@ public abstract class AbstractFAPIBrazilExtractCertificateSubject extends Abstra
 		RDN[] uid = x500name.getRDNs(BCStyle.UID);
 		String softwareId;
 		if (uid.length == 0) {
-			throw error(emptyUidErrorMessage,
+//			throw error(emptyUidErrorMessage,
 				args("subjectdn", subjectDn));
+softwareId = "flibbleboo";
 		} else {
 			// newer Brazilian style certificate as per
 			// https://github.com/OpenBanking-Brasil/specs-seguranca/blob/main/open-banking-brasil-certificate-standards-1_ID1-ptbr.md

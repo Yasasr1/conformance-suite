@@ -58,9 +58,12 @@ public abstract class AbstractFAPI2BaselineID2BrazilDCR extends AbstractFAPI2Bas
 
 		callAndStopOnFailure(ExtractDirectoryConfiguration.class);
 
-		callAndContinueOnFailure(FAPIBrazilCheckDirectoryDiscoveryUrl.class, Condition.ConditionResult.FAILURE, "BrazilOBDCR-7.1-1");
+		if (isBrazil) {
+			callAndContinueOnFailure(FAPIBrazilCheckDirectoryDiscoveryUrl.class, Condition.ConditionResult.FAILURE, "BrazilOBDCR-7.1-1");
 
-		callAndContinueOnFailure(FAPIBrazilCheckDirectoryApiBase.class, Condition.ConditionResult.FAILURE, "BrazilOBDCR-7.1-1");
+			callAndContinueOnFailure(FAPIBrazilCheckDirectoryApiBase.class, Condition.ConditionResult.FAILURE, "BrazilOBDCR-7.1-1");
+		}
+		// FIXME do we need similar checks for idmvp?
 
 		env.mapKey("config", "directory_config");
 		env.mapKey("server", "directory_server");

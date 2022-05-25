@@ -74,10 +74,10 @@ public class AddMTLSEndpointAliasesToEnvironment extends AbstractCondition {
 			Set<String> keysOnlyInMtlsEndpointAliases = new HashSet<>();
 			keysOnlyInMtlsEndpointAliases.addAll(mtlsEndpointAliases.keySet());
 			keysOnlyInMtlsEndpointAliases.removeAll(server.keySet());
-			if (!keysOnlyInMtlsEndpointAliases.isEmpty()) {
-				throw error("Some endpoints are found only in mtls_endpoint_aliases. Endpoints should only be present in mtls_endpoint_aliases if an endpoint has versions that both do and do not require mtls.",
-					args("mtls_endpoint_aliases", mtlsEndpointAliases, "only_in_mtls", keysOnlyInMtlsEndpointAliases));
-			}
+//			if (!keysOnlyInMtlsEndpointAliases.isEmpty()) {
+//				throw error("Some endpoints are found only in mtls_endpoint_aliases. Endpoints should only be present in mtls_endpoint_aliases if an endpoint has versions that both do and do not require mtls.",
+//					args("mtls_endpoint_aliases", mtlsEndpointAliases, "only_in_mtls", keysOnlyInMtlsEndpointAliases));
+//			}
 		}
 
 		return env;
