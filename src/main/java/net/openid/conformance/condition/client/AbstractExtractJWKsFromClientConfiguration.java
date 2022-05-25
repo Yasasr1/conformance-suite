@@ -3,6 +3,7 @@ package net.openid.conformance.condition.client;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import net.openid.conformance.condition.AbstractCondition;
 import net.openid.conformance.testmodule.Environment;
@@ -20,12 +21,30 @@ public abstract class AbstractExtractJWKsFromClientConfiguration extends Abstrac
 
 		JWKSet parsed;
 
-		try {
-			parsed = JWKSet.parse(jwks.toString());
-		} catch (ParseException e) {
-			throw error("Invalid JWKs in client configuration (private key is required), JWKSet.parse failed",
-				e, args("client_jwks", jwks));
+		if (!jwks.isJsonObject()) {
+			throw error("The client jwks is not a JSON object", args("jwks", jwks));
 		}
+
+		if (((JsonObject) jwks).has("keys")) {
+			try {
+				parsed = JWKSet.parse(jwks.toString());
+			} catch (ParseException e) {
+				throw error("Invalid JWKS in client configuration: " + e.getMessage(),
+					e, args("client_jwks", jwks));
+			}
+		} else {
+			// try parsing as a jwk; users often have a jwk and often only need one key, so this just makes things
+			// easier for them
+			try {
+				JWK jwk = JWK.parse(jwks.toString());
+				parsed = new JWKSet(jwk);
+				jwks = JsonParser.parseString(parsed.toString());
+			} catch (ParseException e) {
+				throw error("Invalid JWK in client configuration: " + e.getMessage(),
+					e, args("client_jwks", jwks));
+			}
+		}
+
 
 		JWKSet pub = parsed.toPublicJWKSet();
 
