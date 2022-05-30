@@ -486,7 +486,25 @@ public class BrowserControl implements DataUtils {
 						} else if (elementType.equalsIgnoreCase("match")) {
 							waiting.until(ExpectedConditions.urlMatches(target)); // NB this takes a regexp
 						} else if (!Strings.isNullOrEmpty(regexp)) {
-
+							Pattern pattern = Pattern.compile(regexp);
+							waiting.until(ExpectedConditions.textMatches(getSelector(elementType, target), pattern));
+							if (updateImagePlaceHolder || updateImagePlaceHolderOptional) {
+								// make a snapshot of the page available to the test log
+								updatePlaceholder(this.placeholder, driver.getPageSource(), driver.getResponseContentType(), updateImagePlaceHolderOptional);
+							}
+						} else {
+							eventLog.log("WebRunner", args(
+								"msg", "Waiting for Javascript",
+								"url", driver.getCurrentUrl(),
+								"browser", commandString,
+								"task", taskName,
+								"element_type", elementType,
+								"target", target,
+								"seconds", timeoutSeconds,
+								"result", Condition.ConditionResult.INFO,
+								"regexp", regexp,
+								"action", action
+							));
 							// wait for js to load
 							waiting.until((ExpectedCondition<Boolean>) webDriver -> ((JavascriptExecutor) webDriver).
 								executeScript("return document.readyState").equals("complete"));
@@ -502,14 +520,6 @@ public class BrowserControl implements DataUtils {
 									count++;
 								}
 							}
-
-							Pattern pattern = Pattern.compile(regexp);
-							waiting.until(ExpectedConditions.textMatches(getSelector(elementType, target), pattern));
-							if (updateImagePlaceHolder || updateImagePlaceHolderOptional) {
-								// make a snapshot of the page available to the test log
-								updatePlaceholder(this.placeholder, driver.getPageSource(), driver.getResponseContentType(), updateImagePlaceHolderOptional);
-							}
-						} else {
 							waiting.until(ExpectedConditions.presenceOfElementLocated(getSelector(elementType, target)));
 						}
 
