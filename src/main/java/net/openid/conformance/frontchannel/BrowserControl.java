@@ -26,11 +26,9 @@ import net.openid.conformance.testmodule.DataUtils;
 import net.openid.conformance.testmodule.OIDFJSON;
 import net.openid.conformance.testmodule.TestFailureException;
 import org.bson.Document;
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
@@ -488,6 +486,23 @@ public class BrowserControl implements DataUtils {
 						} else if (elementType.equalsIgnoreCase("match")) {
 							waiting.until(ExpectedConditions.urlMatches(target)); // NB this takes a regexp
 						} else if (!Strings.isNullOrEmpty(regexp)) {
+
+							// wait for js to load
+							waiting.until((ExpectedCondition<Boolean>) webDriver -> ((JavascriptExecutor) webDriver).
+								executeScript("return document.readyState").equals("complete"));
+
+							// wait for jquery to load
+							int count =0;
+							if((Boolean) driver.executeScript("return window.jQuery != undefined")) {
+								while(!(Boolean) driver.executeScript("return jQuery.active == 0")) {
+									Thread.sleep(4000);
+									if(count>4) {
+										break;
+									}
+									count++;
+								}
+							}
+
 							Pattern pattern = Pattern.compile(regexp);
 							waiting.until(ExpectedConditions.textMatches(getSelector(elementType, target), pattern));
 							if (updateImagePlaceHolder || updateImagePlaceHolderOptional) {
@@ -503,6 +518,8 @@ public class BrowserControl implements DataUtils {
 					} catch (TimeoutException timeoutException) {
 						this.lastException = timeoutException.getMessage();
 						throw new TestFailureException(testId, "Timed out waiting: " + command.toString());
+					} catch (InterruptedException e) {
+						throw new RuntimeException(e);
 					}
 				} else {
 					this.lastException = "Invalid Command " + commandString;
